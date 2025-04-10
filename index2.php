@@ -9,11 +9,11 @@ try {
     $pdo = new PDO($dsn, $user, $db_pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Create and select the database
+
     $pdo->exec("CREATE DATABASE IF NOT EXISTS $db_name");
     $pdo->exec("USE $db_name");
 
-    // Create table if it doesn't exist
+
     $sql = "CREATE TABLE IF NOT EXISTS students (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(100),
@@ -26,7 +26,6 @@ try {
     )";
     $pdo->exec($sql);
 
-    // Handle form submission
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $name = $_POST['name'];
         $email = $_POST['email'];
