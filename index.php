@@ -7,13 +7,14 @@ $db_pass = '';
 
 
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     try {
-        $dsn = "mysql:host=$host;dbname=$dbname";
+        $dsn = "mysql:host=$host;";
         $pdo = new PDO($dsn, $user, $db_pass);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = "CREATE DATABASE IF NOT EXISTS SALAM1";
+        $pdo->exec($sql);
         echo 'Connected to database successfully!';
     } catch (\Throwable $th) {
         die('Failed to connect to database: ' . $th->getMessage());
@@ -31,10 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <h1>Click to connect DataBase</h1>
-    <!-- HTML form to insert user data -->
     <form method="POST" action="">
-
-
         <button type="submit">Submit</button>
     </form>
 </body>
