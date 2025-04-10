@@ -12,8 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $dsn = "mysql:host=$host;";
         $pdo = new PDO($dsn, $user, $db_pass);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql = "CREATE DATABASE IF NOT EXISTS $db_pass";
-        $pdo->exec($sql);
         echo 'Connected to database successfully!';
     } catch (\Throwable $th) {
         die('Failed to connect to database: ' . $th->getMessage());
