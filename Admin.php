@@ -2,10 +2,9 @@
 
     $host = 'localhost';
     $user = 'root';
-    $db_name = 'Madrasa';
+    $db_name = 'motamadris';
     $db_pass = '';
-    
-  
+
     try{
         $dsn = "mysql:host=$host;";
         $pdo = new PDO($dsn, $user, $db_pass);
@@ -13,35 +12,55 @@
         $pdo->exec("CREATE DATABASE IF NOT EXISTS $db_name");
         $pdo->exec("USE $db_name");
 
-        $sql = "CREATE TABLE IF NOT EXISTS mota3alim (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            NAME VARCHAR(255),
-            EMAIL VARCHAR(255),
-            AGE INT,
-            MAJOR varchar(100),
-            PHONE varchar(10),
-            ADDRESS VARCHAR(255),
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        $sql = "CREATE TABLE IF NOT EXISTS ASATIDA (
+              id INT AUTO_INCREMENT PRIMARY KEY,
+              NAME VARCHAR(255),
+              EMAIL VARCHAR(255),
+              AGE INT,
+              MAJOR VARCHAR(255),
+              PHONE VARCHAR(10),
+              ADDRESS VARCHAR(255),
+              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )";
+
         $pdo->exec($sql);
-        if($_SERVER['REQUEST_METHOD'] == 'POST'){
-            $NAME = $_POST['NAME'];
-            $EMAIL = $_POST['EMAIL'];
-            $AGE = $_POST['AGE'];
-            $MAJOR = $_POST['MAJOR'];
-            $ADDRESS = $_POST['ADDRESS'];
-            $PHONE = $_POST['PHONE'];
+    if($_SERVER["REQUEST_METHOD"] == 'POST'){
+        $NAME = $_POST['NAME'];
+        $EMAIL = $_POST['EMAIL'];
+        $AGE = $_POST['AGE'];
+        $MAJOR = $_POST['MAJOR'];
+        $PHONE = $_POST['PHONE'];
+        $ADDRESS = $_POST['ADDRESS'];
+        
+        $stnt = $pdo->prepare("INSERT INTO ASATIDA(NAME,EMAIL,AGE,MAJOR,PHONE,ADDRESS)VALUE(?,?,?,?,?,?)");
+        $stnt->execute([$NAME,$EMAIL,$AGE,$MAJOR,$PHONE,$ADDRESS]);
+        echo 'DATABASE CREATED AND CONNECTED SUCCESFULY !';
 
-            $stnt = $pdo->prepare("INSERT INTO mota3alim (NAME, EMAIL, AGE, MAJOR, PHONE, ADDRESS) VALUES (?, ?, ?, ?, ?, ?)");
-            $stnt->execute([$NAME,$EMAIL,$AGE,$MAJOR,$PHONE,$ADDRESS]);
-            echo 'DATABASE CONNECTED SUCCESFULLY';
-        }
 
+    }
+
+        echo 'database saved succesfuly !';
     }catch(\Throwable $th){
-        die('failed to connect database' . $th->getMessage());
+        die('Failed to save the database !' .$th->getMessage());
 
+    
 }
+
+
+
+
+
+
+
+
+
 ?>
+
+
+
+
+
+
 
 <html lang="en">
 <head>
@@ -92,7 +111,7 @@
 <body>
 
 <form method="POST">
-    <h2 style="text-align: center;">Ostadi Forum</h2>
+    <h2 style="text-align: center;">Mota3alim forum</h2>
     <input type="text" name="NAME" placeholder="Full Name" required>
     <input type="email" name="EMAIL" placeholder="Email" required>
     <input type="number" name="AGE" placeholder="Age" required>
