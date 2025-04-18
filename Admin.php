@@ -1,60 +1,37 @@
 <?php
+    require "config.php" ;
 
-    $host = 'localhost';
-    $user = 'root';
-    $db_name = 'motamadris';
-    $db_pass = '';
 
-    try{
-        $dsn = "mysql:host=$host;";
-        $pdo = new PDO($dsn, $user, $db_pass);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $pdo->exec("CREATE DATABASE IF NOT EXISTS $db_name");
-        $pdo->exec("USE $db_name");
 
-        $sql = "CREATE TABLE IF NOT EXISTS ASATIDA (
-              id INT AUTO_INCREMENT PRIMARY KEY,
-              NAME VARCHAR(255),
-              EMAIL VARCHAR(255),
-              AGE INT,
-              MAJOR VARCHAR(255),
-              PHONE VARCHAR(10),
-              ADDRESS VARCHAR(255),
-              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )";
-
-        $pdo->exec($sql);
-    if($_SERVER["REQUEST_METHOD"] == 'POST'){
+    if ($_SERVER["REQUEST_METHOD"] == 'POST') {
         $NAME = $_POST['NAME'];
         $EMAIL = $_POST['EMAIL'];
         $AGE = $_POST['AGE'];
         $MAJOR = $_POST['MAJOR'];
         $PHONE = $_POST['PHONE'];
         $ADDRESS = $_POST['ADDRESS'];
-        
-        $stnt = $pdo->prepare("INSERT INTO ASATIDA(NAME,EMAIL,AGE,MAJOR,PHONE,ADDRESS)VALUE(?,?,?,?,?,?)");
-        $stnt->execute([$NAME,$EMAIL,$AGE,$MAJOR,$PHONE,$ADDRESS]);
-        echo 'DATABASE CREATED AND CONNECTED SUCCESFULY !';
+        $PASSWORD = $_POST['PASSWORD'];
 
+        // Hash the password
 
+        // Check if email or phone already exists
+        $check = $pdo->prepare("SELECT * FROM ASATIDA WHERE EMAIL = ? OR PHONE = ?");
+        $check->execute([$EMAIL, $PHONE]);
+        if ($check->fetch()) {
+            die("❌ Email or phone already exists. Try again.");
+        }
+
+        // Insert user
+        $stnt = $pdo->prepare("INSERT INTO ASATIDA (NAME,EMAIL,AGE,MAJOR,PHONE,ADDRESS,PASSWORD) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stnt->execute([$NAME,$EMAIL,$AGE,$MAJOR,$PHONE,$ADDRESS,$PASSWORD]);
+
+        // Redirect after success
+        header("Location: ./login.php");
+        exit;
     }
 
-        echo 'database saved succesfuly !';
-    }catch(\Throwable $th){
-        die('Failed to save the database !' .$th->getMessage());
-
-    
-}
-
-
-
-
-
-
-
-
-
 ?>
+
 
 
 
@@ -118,6 +95,7 @@
     <input type="text" name="MAJOR" placeholder="Major" required>
     <input type="text" name="PHONE" placeholder="Phone Number" maxlength="10" required>
     <input type="text" name="ADDRESS" placeholder="Address" required>
+    <input type="password" name="PASSWORD" placeholder="password" required>
     <button type="submit">Submit</button>
 </form>
 
