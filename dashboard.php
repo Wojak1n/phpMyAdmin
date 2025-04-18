@@ -29,7 +29,7 @@ if (!$user) {
 </head>
 <body>
 
-<h1>WELCOME <?php echo htmlspecialchars($user["NAME"]); ?> dzeb</h1>
+<h1>WELCOME <?php echo htmlspecialchars($user["NAME"]); ?></h1>
 <p>my email :<?php echo htmlspecialchars($user["EMAIL"]); ?> </p>
 <p>my Phone :<?php echo htmlspecialchars($user["PHONE"]); ?> </p>
 
